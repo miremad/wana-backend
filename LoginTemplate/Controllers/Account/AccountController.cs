@@ -15,10 +15,8 @@ namespace LoginTemplate.Controllers.Account
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly SignInManager<ApplicationUser> signInManager;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IUserService userService;
-        private readonly JwtSettings _jwtsettings;
 
         public AccountController(
             UserManager<ApplicationUser> _userManager,
@@ -26,10 +24,8 @@ namespace LoginTemplate.Controllers.Account
             IUserService _userService,
             IOptions<JwtSettings> jwtsettings)
         {
-            signInManager = _signInManager;
             userManager = _userManager;
             userService = _userService;
-            _jwtsettings = jwtsettings.Value;
         }
 
         [HttpPost("createUser")]
