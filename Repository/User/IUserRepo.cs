@@ -10,5 +10,6 @@ namespace Repository
     public interface IUserRepo
     {
         Task<UserDetailDto> getUser(string username);
+        Task<UserDetailDto> getCurrentUser();
     }
 }

@@ -26,5 +26,13 @@ namespace Repository.User
             var user = await _dbContext.Users.Where(u => u.UserName == username).ProjectTo<UserDetailDto>(_mapper.ConfigurationProvider).SingleOrDefaultAsync();
             return user;
         }
+
+        public async Task<UserDetailDto> getCurrentUser()
+        {
+
+            var userId = _dbContext.getCurrentUserID();
+            var user = await _dbContext.Users.Where(x => x.Id == userId).ProjectTo<UserDetailDto>(_mapper.ConfigurationProvider).SingleOrDefaultAsync();
+            return user;
+        }
     }
 }

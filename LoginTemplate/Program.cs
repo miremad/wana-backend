@@ -1,6 +1,5 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -12,7 +11,6 @@ using Repository.User;
 using Service.JWT;
 using Service.UserService;
 using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -58,6 +56,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
         .AddRoles<IdentityRole>()
         .AddEntityFrameworkStores<AppDBContext>()
         .AddDefaultTokenProviders();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddAuthorization(options =>
 {

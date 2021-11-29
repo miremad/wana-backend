@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Model;
 using Model.Model;
@@ -46,7 +47,7 @@ namespace Service.UserService
             {
                 var roles = await context.UserRoles.Where(x => x.UserId == user.Id).Select(c => c.RoleId).ToListAsync();
                 var userRoles = context.Roles.Where(x => roles.Contains(x.Id)).Select(c => c.Name).ToArray();
-                userLoginResponse.Token = jwtManager.Authentication(userModel.UserName, userModel.Password, userRoles);
+                userLoginResponse.Token = jwtManager.Authentication(user.Id, userModel.UserName, userModel.Password, userRoles);
                 return userLoginResponse;
             }
 
@@ -57,6 +58,12 @@ namespace Service.UserService
         public async Task<UserDetailDto> getUser(string username)
         {
             return await userRepo.getUser(username);
+        }
+
+        public async Task<UserDetailDto> getCurrentUser()
+        {
+            
+            return await userRepo.getCurrentUser();
         }
     }
 }

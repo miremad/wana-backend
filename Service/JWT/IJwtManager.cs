@@ -8,7 +8,7 @@ namespace Service.JWT
 {
     public interface IJwtManager
     {
-        string Authentication(string username, string password, string[] roles);
+        string Authentication(string id, string username, string password, string[] roles);
         
     }
 }

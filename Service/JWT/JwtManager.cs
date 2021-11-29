@@ -21,14 +21,14 @@ namespace Service.JWT
             _jwtsettings = jwtsettings.Value;
             key = _jwtsettings.Secret;
         }
-        public string Authentication(string username, string password, string[] roles)
+        public string Authentication(string id, string username, string password, string[] roles)
         {
             
             
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenKey = Encoding.ASCII.GetBytes(key);
 
-            List<Claim> claims = new List<Claim> { new Claim(ClaimTypes.Name, username) };
+            List<Claim> claims = new List<Claim> { new Claim(ClaimTypes.Name, username), new Claim(ClaimTypes.NameIdentifier, id) };
             var roleClaims = roles.Select(r => new Claim(ClaimTypes.Role, r.ToString()));
             claims.AddRange(roleClaims);
 
