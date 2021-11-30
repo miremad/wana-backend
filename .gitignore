@@ -9,6 +9,8 @@
 /Human.WorkerService/Setup/*.exe
 /LoginTemplate/bin/
 /LoginTemplate/obj/
+/AdminApi/bin/
+/AdminApi/obj/
 /Model/bin/
 /Model/obj/
 /Repository/obj/
