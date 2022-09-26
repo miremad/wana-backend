@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Model.Model;
 using Model.ViewModel;
+using Model.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +10,13 @@ using System.Threading.Tasks;
 
 namespace Model.AutoMapper
 {
-    public class UserProfile : Profile
+    public class LabelProfile: Profile
     {
-        public UserProfile()
+        public LabelProfile()
         {
-            CreateMap<ApplicationUser, UserDetailDto>();
+            CreateMap<CreateLabelDto, Label>();
+
+            CreateMap<Label, LabelDto>();
         }
-        
     }
 }

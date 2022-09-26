@@ -11,5 +11,6 @@ namespace Repository
     {
         Task<UserDetailDto> getUser(string username);
         Task<UserDetailDto> getCurrentUser();
+        int getCurrentUserId();
     }
 }

@@ -6,7 +6,7 @@ using System.Security.Claims;
 
 namespace Model
 {
-    public class AppDBContext : IdentityDbContext<ApplicationUser>
+    public class AppDBContext : IdentityDbContext<ApplicationUser, ApplicationRole, int>
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         public AppDBContext(DbContextOptions<AppDBContext> options, IHttpContextAccessor httpContextAccessor)
@@ -15,10 +15,10 @@ namespace Model
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public string getCurrentUserID()
+        public int getCurrentUserID()
         {
             var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            return userId;
+            return int.Parse(userId);
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -27,7 +27,10 @@ namespace Model
             // For example, you can rename the ASP.NET Core Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
         }
-        public DbSet<Item> Items { get; set; }
+
+        public DbSet<TaskToDo> TaskToDos { get; set; }
+        public DbSet<Label> Labels { get; set; }
+        public DbSet<TaskLabel> TaskLabels { get; set; }
 
     }
 }

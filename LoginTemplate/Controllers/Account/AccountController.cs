@@ -34,9 +34,10 @@ namespace LoginTemplate.Controllers.Account
             ApplicationUser user = new ApplicationUser
             {
                 UserName = userModel.UserName,
-                City = userModel.City,
                 Email = userModel.Email,
-                PhoneNumber = userModel.PhoneNumber
+                PhoneNumber = userModel.PhoneNumber,
+                FirstName = userModel.FirstName,
+                LastName = userModel.LastName
 
 
             };

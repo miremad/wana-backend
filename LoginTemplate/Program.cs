@@ -52,18 +52,17 @@ builder.Services.AddAuthentication(x =>
 });
 
 builder.Services.AddDbContext<AppDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-        .AddRoles<IdentityRole>()
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
+        .AddRoles<ApplicationRole>()
         .AddEntityFrameworkStores<AppDBContext>()
         .AddDefaultTokenProviders();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("RequireAdministratorRole",
-         policy => policy.RequireRole("Administrator"));
-    options.AddPolicy("AllUserRoles", policy =>
-                  policy.RequireRole("Administrator", "PowerUser", "BackupAdministrator"));
+
+    options.AddPolicy("User", policy =>
+                  policy.RequireRole("User"));
 
 });
 
@@ -93,6 +92,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors(x => x
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .SetIsOriginAllowed(origin => true)               
+            .AllowCredentials()
+            );
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

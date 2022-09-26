@@ -3,12 +3,17 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Model;
 using Model.AutoMapper;
 using Model.Model;
 using Repository;
+using Repository.Label;
+using Repository.Task;
 using Repository.User;
 using Service.JWT;
+using Service.LabelService;
+using Service.TaskService;
 using Service.UserService;
 using System.Reflection;
 using System.Text;
@@ -20,7 +25,34 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "My API",
+        Version = "v1"
+    });
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please insert JWT with Bearer into field",
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+   {
+     new OpenApiSecurityScheme
+     {
+       Reference = new OpenApiReference
+       {
+         Type = ReferenceType.SecurityScheme,
+         Id = "Bearer"
+       }
+      },
+      new string[] { }
+    }
+  });
+});
 
 
 // JWT
@@ -52,31 +84,29 @@ builder.Services.AddAuthentication(x =>
 });
 
 builder.Services.AddDbContext<AppDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-        .AddRoles<IdentityRole>()
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
+        .AddRoles<ApplicationRole>()
         .AddEntityFrameworkStores<AppDBContext>()
         .AddDefaultTokenProviders();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("RequireAdministratorRole",
-         policy => policy.RequireRole("Administrator"));
-    options.AddPolicy("AllUserRoles", policy =>
-                  policy.RequireRole("Administrator", "PowerUser", "BackupAdministrator"));
-
-});
 
 
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<ILabelService, LabelService>();
+builder.Services.AddTransient<ITaskService, TaskService>();
 builder.Services.AddTransient<IJwtManager, JwtManager>();
 
+builder.Services.AddTransient<ITaskRepo, TaskRepo>();
 builder.Services.AddTransient<IUserRepo, UserRepo>();
+builder.Services.AddTransient<ILabelRepo, LabelRepo>();
 
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 var mapperConfig = new MapperConfiguration(mc =>
 {
     mc.AddProfile(new UserProfile());
+    mc.AddProfile(new TaskProfile());
+    mc.AddProfile(new LabelProfile());
 });
 IMapper mapper = mapperConfig.CreateMapper();
 builder.Services.AddSingleton(mapper);
@@ -91,6 +121,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors(x => x
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .SetIsOriginAllowed(origin => true)
+            .AllowCredentials()
+            );
+
 
 app.UseHttpsRedirection();
 

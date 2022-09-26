@@ -5,7 +5,7 @@ using Service.UserService;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace LoginTemplate.Controllers.UserController
+namespace AdminApi.Controllers.UserController
 {
     [Authorize(AuthenticationSchemes = "Bearer")]
     [Route("api/[controller]")]
@@ -20,7 +20,6 @@ namespace LoginTemplate.Controllers.UserController
             userService = _userService;
         }
 
-        [Authorize(Roles = "Administrator")]
         [HttpGet("getUserByUsername")]
         public async Task<UserDetailDto> getUserByUsername(string username)
         {

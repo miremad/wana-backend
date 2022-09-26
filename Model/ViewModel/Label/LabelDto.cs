@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model.Model
+namespace Model.ViewModel
 {
-    public class Item
+    public class LabelDto
     {
         public int Id { get; set; }
         public string Tittle { get; set; }
+        public string Color { get; set; }
     }
 }
